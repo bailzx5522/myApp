@@ -1,0 +1,25 @@
+{
+  "name": "myAppServer",
+  "version": "0.1.0",
+  "description": "My application",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bailzx5522/myApp"
+  },
+  "author": "dominic",
+  "license": "MIT",
+  "homepage": "https://github.com/bailzx5522/myApp"
+  "dependencies": {
+    "body-parser": "^1.3.1",
+    "express": "^4.4.5",
+    "method-override": "^2.0.2"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "Ionic",
+    "App"
+  ]
+}
