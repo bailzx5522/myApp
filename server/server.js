@@ -14,9 +14,11 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/myapp');
 
 // controllers
+var account = require('./controllers/account');
+var activity = require('./controllers/activity');
+var group = require('./controllers/group');
 var home = require('./controllers/home');
-var userController = require('./controllers/user');
-var groupController = require('./controllers/group');
+var user = require('./controllers/user');
 
 // Config
 var config = JSON.parse(fs.readFileSync('./config.js', 'utf8'));
@@ -35,19 +37,36 @@ app.all('*', function(req, res, next) {
     next();
 });
 
-// app routes
+// user
 app.get('/', home.index);
-app.get('/login', userController.getLogin);
-app.post('/login', userController.postLogin);
-app.get('/logout', userController.logout);
-app.get('/signup', userController.getSignup);
-app.post('/signup', userController.postSignup);
-//app.get('/account', passportConf.isAuthenticated, userController.getAccount);
-//app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
-//app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
-//app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
-app.post('/group', groupController.postGroup);
+app.get('/login', user.getLogin);
+app.post('/login', user.postLogin);
+app.get('/logout', user.logout);
+app.get('/signup', user.getSignup);
+app.post('/signup', user.postSignup);
 
+// account
+app.get('/account/:id', account.get);
+app.post('/account', account.add);
+app.put('/account', account.update);
+app.delete('/account', account.delete);
+
+
+// group
+app.get('/group/:id', group.getGroup);
+app.get('/groups', group.getGroups);
+app.post('/group', group.create);
+app.delete('/group', group.delete);
+app.put('/group', group.update);
+
+// activity
+app.get('/activity/:id', act.getGroup);
+app.get('/activities', act.getGroups);
+app.post('/activity', act.create);
+app.put('/activity', act.update);
+app.delete('/activity', act.delete);
+
+// app setting
 app.set('port', config.port || 5000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

@@ -6,6 +6,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema
 
 var Group = new Schema({
+    _creator: {
+        type: Number,
+        ref : 'User'
+    },
     name: {
         required: true,
         type: String,

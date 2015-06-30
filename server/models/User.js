@@ -5,6 +5,9 @@ var Schema = mongoose.Schema
 var sex = 'secret male female'.split(' ');
 
 var User = new Schema({
+    _id: {
+        type: Number,
+    },
     mobile: { type: String, unique: true, lowercase: true },
     password: String,
     email: String,
