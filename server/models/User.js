@@ -4,43 +4,48 @@ var bcrypt = require('bcrypt-nodejs');
 var Schema = mongoose.Schema
 var sex = 'secret male female'.split(' ');
 
-var User = new Schema({
-    _id: {
-        type: Number,
-    },
-    mobile: { type: String, unique: true, lowercase: true },
-    password: String,
-    email: String,
+var userSchema = new Schema({
+  mobile: {
+    type: String,
+    unique: true,
+    lowercase: true
+  },
+  password: String,
+  email: String,
 
-    weibo: String,
-    qq: String,
-    weixin: String,
-    tokens: Array,
+  weibo: String,
+  qq: String,
+  weixin: String,
 
-    displayName: {
-        type: String,
-        default: '',
-        trim: true},
-    gender: {
-        type: String,
-        enum: sex,
-        required: true,
-        defalut: sex[0]},
+  displayName: {
+    type: String,
+    default: '',
+    trim: true},
+  gender: {
+    type: String,
+    enum: sex,
+    defalut: sex[0]},
+  level: {
+    type: String,
+    default: 0
+  },
 
-    location: String,
-    picture: String,
+  location: String,
+  picture: String,
 
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date
+  },
 
   deletedAt: Date,
-  deleted: Boolean
+  deleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 userSchema.pre('save', function(next) {
@@ -63,5 +68,5 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
   });
 };
 
-//module.exports = mongoose.model('User', userSchema);
-export.User = User;
+var model = mongoose.model('User', userSchema);
+module.exports = model;

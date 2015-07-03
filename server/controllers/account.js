@@ -1,9 +1,21 @@
-var Group = require('../models/Group')
+var Account = require('../models/Account')
 
-exports.postGroup = function(req.res) {
-    
+// create a new account for user
+exports.create = function(req, res) {
+  return
 }
 
-exports.getGroup = function(req.res) {
-    Group.
+// retrieve an account
+exports.get = function(req, res) {
+  return
+}
+
+// update an account
+exports.update = function(req, res){
+  return
+}
+
+// logical delete an account
+exports.delete = function(req, res) {
+  return
 }

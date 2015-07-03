@@ -19,6 +19,7 @@ var activity = require('./controllers/activity');
 var group = require('./controllers/group');
 var home = require('./controllers/home');
 var user = require('./controllers/user');
+var auth = require('./controllers/auth')
 
 // Config
 var config = JSON.parse(fs.readFileSync('./config.js', 'utf8'));
@@ -38,33 +39,39 @@ app.all('*', function(req, res, next) {
 });
 
 // user
+app.get('/user', user.getUsers)
+app.get('/user/:id', user.getUser)
+app.post('/user', user.create)
+app.put('/user', user.update)
+app.delete('/user', user.delete)
+
+// auth
 app.get('/', home.index);
-app.get('/login', user.getLogin);
-app.post('/login', user.postLogin);
-app.get('/logout', user.logout);
-app.get('/signup', user.getSignup);
-app.post('/signup', user.postSignup);
+app.get('/login', auth.getLogin);
+app.post('/login', auth.postLogin);
+app.get('/logout', auth.logout);
+app.get('/signup', auth.getSignup);
+app.post('/signup', auth.postSignup);
 
 // account
 app.get('/account/:id', account.get);
-app.post('/account', account.add);
+app.post('/account', account.create);
 app.put('/account', account.update);
 app.delete('/account', account.delete);
 
+// activity
+app.get('/activity/:id', activity.getActivity);
+app.get('/activity', activity.getActivities);
+app.post('/activity', activity.create);
+app.put('/activity', activity.update);
+app.delete('/activity', activity.delete);
 
 // group
 app.get('/group/:id', group.getGroup);
-app.get('/groups', group.getGroups);
+app.get('/group', group.getGroups);
 app.post('/group', group.create);
 app.delete('/group', group.delete);
 app.put('/group', group.update);
-
-// activity
-app.get('/activity/:id', act.getGroup);
-app.get('/activities', act.getGroups);
-app.post('/activity', act.create);
-app.put('/activity', act.update);
-app.delete('/activity', act.delete);
 
 // app setting
 app.set('port', config.port || 5000);

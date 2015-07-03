@@ -1,54 +1,56 @@
 /*
- * Group is used for people talking and organize activity
- * There are different roles.
+ *
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema
 
-var Group = new Schema({
-    name: {
-        required: true,
-        type: String,
-        trim: true
-    },
-    members: [{
-        id: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-            //required: true
-        },
-        level: {
-            type: Number,
-            default: 0
-        },
-        name: {
-            type: String,
-            //required: true
-        }
-    }],
+var ActivityClassify = 'others sport party'.split(' ')
+var Activity = new Schema({
+  beginAt: {
+    type: Date,
+    required: true
+  },
 
-    settings: {
-        type: {
-            type: String,
-            default:''
-        },
-        location:{
-            type:String,
-            defalut:''
-        }
-    },
+  endAt: {
+    type: Date,
+    required: true
+  },
 
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    },
-    deletedAt: Date,
-    deleted: Boolean
+  classify: {
+    type: String,
+    enum: ActivityClassify,
+    default: ActivityClassify[0]
+  },
+
+  price: {
+    type: Number,
+    default: 0
+  },
+
+  pMax: {
+    type:Number,
+    required: true
+  },
+
+  pMin: {
+    type: Number,
+    default: 0
+  },
+
+  info: String,
+
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+  },
+  deletedAt: Date,
+  deleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
-//module.exports = mongoose.model('Group', Group);
-export.Group = Group;
+module.exports = mongoose.model('Activity', Activity);
