@@ -1,6 +1,11 @@
 
 // module dependencies
 var express = require('express');
+var app = express();
+var io = require('socket.io')
+var http = require('http');
+var server = http.createServer(app)
+var io = io.listen(server)
 var bodyParser      = require('body-parser');
 var methodOverride  = require('method-override');
 var logger = require('morgan');
@@ -13,17 +18,49 @@ var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/myapp');
 
-// controllers
-var account = require('./controllers/account');
-var activity = require('./controllers/activity');
-var group = require('./controllers/group');
-var home = require('./controllers/home');
-var user = require('./controllers/user');
-var auth = require('./controllers/auth')
+
+// log setting
+/*
+var log4js = require('log4js');
+log4js.configure({
+  appenders: [{
+    type: 'console'
+  },
+  {
+    type: 'file',
+    filename: '/tmp/app_server.log',
+    maxLogSize: 1024,
+    backups:3,
+    category: 'normal'
+  }],
+  replaceConsole: true
+})
+var logger = log4js.getLogger('normal');
+logger.setLevel('DEBUG');
+app.use(log4js.connectLogger(this.logger('normal'), {level:'auto', format:':method :url'}));
+exports.logger = function(name) {
+  var logger = log4js.getLogger(name)
+  logger.setLevel("DEBUG")
+  return logger
+}
+*/
 
 // Config
 var config = JSON.parse(fs.readFileSync('./config.js', 'utf8'));
-app = express();
+
+require('./routes/api')(app)
+
+// socket server
+require('./sockets/base')(io)
+
+server.listen(5000, function() {
+  console.log('\nHttp listen 5000')
+})
+
+// app setting
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -36,48 +73,4 @@ app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
-});
-
-// user
-app.get('/user', user.getUsers)
-app.get('/user/:id', user.getUser)
-app.post('/user', user.create)
-app.put('/user', user.update)
-app.delete('/user', user.delete)
-
-// auth
-app.get('/', home.index);
-app.get('/login', auth.getLogin);
-app.post('/login', auth.postLogin);
-app.get('/logout', auth.logout);
-app.get('/signup', auth.getSignup);
-app.post('/signup', auth.postSignup);
-
-// account
-app.get('/account/:id', account.get);
-app.post('/account', account.create);
-app.put('/account', account.update);
-app.delete('/account', account.delete);
-
-// activity
-app.get('/activity/:id', activity.getActivity);
-app.get('/activity', activity.getActivities);
-app.post('/activity', activity.create);
-app.put('/activity', activity.update);
-app.delete('/activity', activity.delete);
-
-// group
-app.get('/group/:id', group.getGroup);
-app.get('/group', group.getGroups);
-app.post('/group', group.create);
-app.delete('/group', group.delete);
-app.put('/group', group.update);
-
-// app setting
-app.set('port', config.port || 5000);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-app.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + app.get('port'));
 });
